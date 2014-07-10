@@ -1,10 +1,14 @@
 language: scala
 
 scala:
-  - 2.11.0
+  - 2.10.2
 
-services:
-  - mongodb
+addons:
+  postgresql: "9.3"
+
+before_script:
+  - psql -c 'DROP DATABASE IF EXISTS test' -U postgres
+  - psql -c 'CREATE DATABASE test;' -U postgres
 
 script:
   - export SBT_OPTS="-XX:+CMSClassUnloadingEnabled -XX:PermSize=256M -XX:MaxPermSize=512M"
@@ -12,7 +16,7 @@ script:
 
 after_script:
   - mkdir -p shippable/codecoverage
-  - mv target/scala-2.11/coverage-report/cobertura.xml shippable/codecoverage/
+  - mv target/scala-2.10/coverage-report/cobertura.xml shippable/codecoverage/
 
 notifications:
   email:
